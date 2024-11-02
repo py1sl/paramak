@@ -119,6 +119,10 @@ def spherical_tokamak_from_plasma(
         triangularity (float, optional): _description_. Defaults to 0.55.
         rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
         extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
+        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            Each dictionary entry should be a key that matches the assembly part name
+            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
+            representing the RGB or RGBA values.
 
     Returns:
         _type_: _description_
@@ -171,6 +175,11 @@ def spherical_tokamak(
         triangularity (float, optional): _description_. Defaults to 0.55.
         rotation_angle (Optional[str], optional): _description_. Defaults to 180.0.
         extra_cut_shapes (Sequence, optional): _description_. Defaults to [].
+        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            Each dictionary entry should be a key that matches the assembly part name
+            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
+            representing the RGB or RGBA values.
+
 
     Returns:
         _type_: _description_
