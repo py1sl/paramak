@@ -156,7 +156,27 @@ def tokamak_from_plasma(
     rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
+    colors: dict = {}
 ):
+    """
+    Creates a tokamak fusion reactor from a radial build and plasma parameters.
+
+    Args:
+        radial_build: sequence of tuples containing the radial build of the
+            reactor. Each tuple should contain a LayerType and a float
+        elongation: The elongation of the plasma. Defaults to 2.0.
+        triangularity: The triangularity of the plasma. Defaults to 0.55.
+        rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
+        extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
+        extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].
+        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            Each dictionary entry should be a key that matches the assembly part name
+            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
+            representing the RGB or RGBA values.
+
+    Returns:
+        CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
+    """
 
     inner_equatorial_point = sum_up_to_plasma(radial_build)
     plasma_radial_thickness = get_plasma_value(radial_build)
@@ -184,27 +204,35 @@ def tokamak_from_plasma(
         rotation_angle=rotation_angle,
         extra_cut_shapes=extra_cut_shapes,
         extra_intersect_shapes=extra_intersect_shapes,
+        colors=colors
     )
 
 
 def tokamak(
-    radial_build: Union[Sequence[Sequence[Tuple[str, float]]], Sequence[Tuple[str, float]]],
+    radial_build: Sequence[Tuple[str, float]],
     vertical_build: Sequence[Tuple[str, float]],
     triangularity: float = 0.55,
     rotation_angle: float = 180.0,
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
+    colors: dict = {}
 ):
     """
-    Creates a tokamak fusion reactor from a radial build and plasma parameters.
+    Creates a tokamak fusion reactor from a radial and vertical build.
 
     Args:
-        radial_build: A list of tuples containing the radial build of the reactor.
-        elongation: The elongation of the plasma. Defaults to 2.0.
+        radial_build: sequence of tuples containing the radial build of the
+            reactor. Each tuple should contain a LayerType and a float 
+        vertical_build: sequence of tuples containing the vertical build of the
+            reactor. Each tuple should contain a LayerType and a float 
         triangularity: The triangularity of the plasma. Defaults to 0.55.
         rotation_angle: The rotation angle of the plasma. Defaults to 180.0.
         extra_cut_shapes: A list of extra shapes to cut the reactor with. Defaults to [].
         extra_intersect_shapes: A list of extra shapes to intersect the reactor with. Defaults to [].
+        colors (dict, optional): the colors to assign to the assembly parts. Defaults to {}.
+            Each dictionary entry should be a key that matches the assembly part name
+            (e.g. 'plasma', or 'layer_1') and a tuple of 3 or 4 floats between 0 and 1
+            representing the RGB or RGBA values.
 
     Returns:
         CadQuery.Assembly: A CadQuery Assembly object representing the tokamak fusion reactor.
@@ -248,7 +276,8 @@ def tokamak(
 
     for i, entry in enumerate(extra_cut_shapes):
         if isinstance(entry, cq.Workplane):
-            my_assembly.add(entry, name=f"add_extra_cut_shape_{i+1}")
+            name = f"add_extra_cut_shape_{i+1}"
+            my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
         else:
             raise ValueError(f"extra_cut_shapes should only contain cadquery Workplanes, not {type(entry)}")
 
@@ -268,14 +297,14 @@ def tokamak(
         for i, entry in enumerate(extra_intersect_shapes):
             reactor_entry_intersection = entry.intersect(reactor_compound)
             intersect_shapes_to_cut.append(reactor_entry_intersection)
-            my_assembly.add(reactor_entry_intersection, name=f"extra_intersect_shapes_{i+1}")
+            name=f"extra_intersect_shapes_{i+1}"
+            my_assembly.add(reactor_entry_intersection, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     # builds just the core if there are no extra parts
     if len(extra_cut_shapes) == 0 and len(intersect_shapes_to_cut) == 0:
-        for i, entry in enumerate(inner_radial_build):
-            my_assembly.add(entry, name=f"inboard_layer_{i+1})")
-        for i, entry in enumerate(blanket_layers):
-            my_assembly.add(entry, name=f"outboard_layer_{i+1})")
+        for i, entry in enumerate(inner_radial_build+blanket_layers):
+            name=f"layer_{i+1}"
+            my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
     else:
         shapes_and_components = []
         for i, entry in enumerate(inner_radial_build + blanket_layers):
@@ -287,10 +316,10 @@ def tokamak(
             shapes_and_components.append(entry)
 
         for i, entry in enumerate(shapes_and_components):
-            my_assembly.add(
-                entry, name=f"layer_{i+1})"
-            )  # TODO track the names of shapes, even when extra shapes are made due to splitting
+            name=f"layer_{i+1}"
+            # TODO track the names of shapes, even when extra shapes are made due to splitting
+            my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
-    my_assembly.add(plasma, name="plasma")
+    my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
 
     return my_assembly

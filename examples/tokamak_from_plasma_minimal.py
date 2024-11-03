@@ -21,7 +21,7 @@ my_reactor = paramak.tokamak_from_plasma(
     triangularity=0.55,
     rotation_angle=180,
 )
-my_reactor.save(f"tokamak_minimal.step")
+my_reactor.export(f"tokamak_minimal.step")
 print(f"Saved as tokamak_minimal.step")
 
 # from cad_to_dagmc import CadToDagmc

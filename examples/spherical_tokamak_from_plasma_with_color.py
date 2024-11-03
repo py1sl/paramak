@@ -25,10 +25,10 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
         "plasma": (1., 0.7, 0.8, 0.6),
         "layer_3": (0.1, 0.1, 0.9),
         "layer_4": (0.4, 0.4, 0.8),
-        "layer_5": (0.6, 0.6, 0.7),
+        "layer_5": (0.5, 0.5, 0.8),
     },
 )
-my_reactor.save(f"spherical_tokamak_from_plasma_with_colors.step")
+my_reactor.export(f"spherical_tokamak_from_plasma_with_colors.step")
 
 # show colors with inbuild vtk viewer
 # from cadquery.vis import show
@@ -40,7 +40,6 @@ my_reactor.save(f"spherical_tokamak_from_plasma_with_colors.step")
 my_reactor.toCompound().export("spherical_tokamak_from_plasma_with_colors.svg")
 
 # show colors with png file export
-import cadquery_png_plugin.plugin
 # first install plugin with
 # pip install git+https://github.com/jmwright/cadquery-png-plugin
 import cadquery_png_plugin.plugin

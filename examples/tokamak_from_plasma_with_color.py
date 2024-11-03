@@ -1,13 +1,6 @@
 from example_util_functions import transport_particles_on_h5m_geometry
-from paramak.utils import create_wire_workplane_from_points
+
 import paramak
-from cadquery import vis, Workplane
-
-# makes a rectangle that overlaps the lower blanket under the plasma
-# the intersection of this and the layers will form the lower divertor
-points = [(300, -700), (300, 0), (400, 0), (400, -700)]
-divertor_lower = Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
-
 
 my_reactor = paramak.tokamak_from_plasma(
     radial_build=[
@@ -27,11 +20,42 @@ my_reactor = paramak.tokamak_from_plasma(
     elongation=2,
     triangularity=0.55,
     rotation_angle=180,
-    extra_intersect_shapes=[divertor_lower],
+    colors={
+        "layer_1": (0.4, 0.9, 0.4),
+        "layer_2": (0.6, 0.8, 0.6),
+        "plasma": (1., 0.7, 0.8, 0.6),
+        "layer_3": (0.1, 0.1, 0.9),
+        "layer_4": (0.4, 0.4, 0.8),
+        "layer_5": (0.5, 0.5, 0.8),
+    }
 )
-my_reactor.export(f"tokamak_with_divertor.step")
-print(f"Saved as tokamak_with_divertor.step")
-# vis.show(my_reactor)
+my_reactor.export(f"tokamak_with_colors.step")
+print(f"Saved as tokamak_with_colors.step")
+
+
+# show colors with inbuild vtk viewer
+# from cadquery.vis import show
+# show(my_reactor)
+
+# cadquery also supports svg export
+# currently needs converting to compound first as svg export not supported by assembly objects
+# lots of options https://cadquery.readthedocs.io/en/latest/importexport.html#exporting-svg
+# my_reactor.toCompound().export("tokamak_from_plasma_with_colors.svg")
+
+# show colors with png file export
+# first install plugin with
+# pip install git+https://github.com/jmwright/cadquery-png-plugin
+import cadquery_png_plugin.plugin
+# lots of options
+# https://github.com/jmwright/cadquery-png-plugin/blob/d2dd6e8a51b7e165ee80240a701c5b434dfe0733/cadquery_png_plugin/plugin.py#L276-L298
+my_reactor.exportPNG(
+    options={
+        "width":1280,
+        "height":1024,
+        "zoom":1.4,
+    },
+    file_path='tokamak_from_plasma_with_colors.png'
+)
 
 # from cad_to_dagmc import CadToDagmc
 # my_model = CadToDagmc()

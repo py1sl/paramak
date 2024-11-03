@@ -20,7 +20,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     triangularity=0.55,
     rotation_angle=180,
 )
-my_reactor.save(f"spherical_tokamak_from_plasma_minimal.step")
+my_reactor.export(f"spherical_tokamak_from_plasma_minimal.step")
 
 
 # from cad_to_dagmc import CadToDagmc
