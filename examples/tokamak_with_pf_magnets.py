@@ -50,7 +50,7 @@ my_reactor = paramak.tokamak(
     extra_cut_shapes=extra_cut_shapes,
 )
 
-my_reactor.export(f"tokamak_minimal.step")
+my_reactor.save(f"tokamak_minimal.step")
 print(f"Saved as tokamak_minimal.step")
 
 # from cad_to_dagmc import CadToDagmc

@@ -37,7 +37,7 @@ my_reactor = paramak.spherical_tokamak_from_plasma(
     rotation_angle=270,
     extra_cut_shapes=extra_cut_shapes,
 )
-my_reactor.export(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
+my_reactor.save(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
 
 
 # from cad_to_dagmc import CadToDagmc
