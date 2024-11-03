@@ -175,4 +175,7 @@ src/_version.py
 *.stp
 *.sql
 *.html
+
 *.png
+*.gif
+*.svg
