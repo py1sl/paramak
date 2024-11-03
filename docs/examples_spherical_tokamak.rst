@@ -77,7 +77,7 @@ Spherical tokamak
         triangularity=0.55,
     )
 
-    result.export(f"spherical_tokamak_minimal.step")
+    result.save(f"spherical_tokamak_minimal.step")
 
 
 Spherical tokamak from plasma
@@ -132,7 +132,7 @@ Spherical tokamak from plasma
         triangularity=0.55,
         rotation_angle=90,
     )
-    result.export('reactor.step')
+    result.save('reactor.step')
 
 
 Spherical tokamak with divertor
@@ -198,7 +198,7 @@ Spherical tokamak with divertor
         rotation_angle=180,
         extra_intersect_shapes=[divertor_lower]
     )
-    result.export('reactor.step')
+    result.save('reactor.step')
 
 Spherical tokamak with poloidal field coils
 -------------------------------------------
@@ -297,7 +297,7 @@ Spherical tokamak with poloidal field coils
         extra_cut_shapes=extra_cut_shapes,
     )
 
-    result.export(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
+    result.save(f"spherical_tokamak_from_plasma_with_pf_magnets.step")
 
 
 Spherical tokamak with toroidal field coils
@@ -412,7 +412,7 @@ Spherical tokamak with toroidal field coils
         extra_cut_shapes=[tf_style_1]
     )
 
-    result.export(f"spherical_tokamak_with_rectangular_tf.step")
+    result.save(f"spherical_tokamak_with_rectangular_tf.step")
 
     tf_style_2 = paramak.toroidal_field_coil_princeton_d(
         r1=5,
@@ -441,7 +441,7 @@ Spherical tokamak with toroidal field coils
         extra_cut_shapes=[tf]
     )
 
-    result2.export(f"spherical_tokamak_with_princeton_tf.step")
+    result2.save(f"spherical_tokamak_with_princeton_tf.step")
 
 
 Spherical tokamak with negative triangularity
@@ -516,4 +516,4 @@ Spherical tokamak with negative triangularity
         rotation_angle=180,
         triangularity=-0.55,
     )
-    result.export(f"spherical_tokamak_minimal.step")
+    result.save(f"spherical_tokamak_minimal.step")

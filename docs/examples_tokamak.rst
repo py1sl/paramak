@@ -84,7 +84,7 @@ Tokamak
         rotation_angle=180,
     )
 
-    result.export(f"tokamak_minimal.step")
+    result.save(f"tokamak_minimal.step")
 
 
 Tokamak from plasma
@@ -237,7 +237,7 @@ Tokamak with negative triangularity
         rotation_angle=180,
     )
 
-    result.export(f"tokamak_minimal.step")
+    result.save(f"tokamak_minimal.step")
 
 
 Tokamak with several customizations
@@ -408,4 +408,4 @@ Tokamak with several customizations
         extra_cut_shapes=extra_cut_shapes,
         extra_intersect_shapes=[divertor_lower]
     )
-    my_reactor.export(f"tokamak_with_customizations.step")
+    my_reactor.save(f"tokamak_with_customizations.step")

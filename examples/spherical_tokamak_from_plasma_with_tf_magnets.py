@@ -60,7 +60,7 @@ result2 = paramak.spherical_tokamak_from_plasma(
     extra_cut_shapes=[tf_style_2],
 )
 
-result2.export("spherical_tokamak_from_plasma_with_prin_tf_coils.step")
+result2.save("spherical_tokamak_from_plasma_with_prin_tf_coils.step")
 
 # from example_util_functions import transport_particles_on_h5m_geometry
 # from cad_to_dagmc import CadToDagmc

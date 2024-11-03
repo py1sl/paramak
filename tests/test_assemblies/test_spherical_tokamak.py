@@ -54,7 +54,7 @@ def test_transport_with_magnets(rotation_angle):
         rotation_angle=rotation_angle,
         extra_cut_shapes=poloidal_field_coils,
     )
-    my_reactor.export(f"spherical_tokamak_with_magnets_{rotation_angle}.step")
+    my_reactor.save(f"spherical_tokamak_with_magnets_{rotation_angle}.step")
     assert Path(f"spherical_tokamak_with_magnets_{rotation_angle}.step").exists()
 
     my_model = CadToDagmc()
@@ -92,7 +92,7 @@ def test_transport_without_magnets():
         elongation=2,
         triangularity=0.55,
     )
-    reactor.export("spherical_tokamak.step")
+    reactor.save("spherical_tokamak.step")
 
     my_model = CadToDagmc()
     material_tags = ["mat1"] * 6
@@ -107,3 +107,30 @@ def test_transport_without_magnets():
         cross_sections_xml="tests/cross_sections.xml",
     )
     assert flux > 0.0
+
+def test_colors():
+    "passing in the colors dictionary should not raise an error"
+    paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+        colors={
+            "layer_1": (0.4, 0.9, 0.4),
+            "layer_2": (0.6, 0.8, 0.6),
+            "plasma": (1., 0.7, 0.8, 0.6),
+            "layer_3": (0.1, 0.1, 0.9),
+            "layer_4": (0.4, 0.4, 0.8),
+            "layer_5": (0.5, 0.5, 0.8),
+        },
+    )
