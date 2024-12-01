@@ -125,7 +125,7 @@ for factor in factors:
     frame += 1
 
 for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
-    reactor = create_reactor(original_radial_build, original_elongation, modified_triangularity, original_n_tf_coils)
+    reactor = create_reactor(original_radial_build, original_elongation, modified_triangularity, original_n_tf_coils, original_coil_height_factor)
     export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
     frame += 1
 
