@@ -98,8 +98,8 @@ def export_reactor_to_png(reactor, file_path):
     ).translate((0, 0, -615)))
     reactor.exportPNG(
         options={
-            "width": 1280,
-            "height": 1024,
+            "width": int(1280/2),
+            "height": int(1024/2),
             "zoom": 1.4,
         },
         file_path=file_path

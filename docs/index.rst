@@ -22,7 +22,9 @@ Paramak provides parameter driven creation of Tokamak and Spherical Tokamak CAD 
 
 The style of reaction, sizes of components, plasma shape and number of radial or vertical layers can be specified,  
 
-
+.. image:: _static/spherical_tokamak_animation.gif
+   :alt: Spherical Tokamak Animation
+   :align: center
 
 .. grid:: 1 1 3 3
     :gutter: 2
