@@ -19,7 +19,7 @@ original_elongation = 2
 original_triangularity = 0.55
 original_n_tf_coils = 8
 original_coil_height_factor = 1
-original_divertor_thickness = 40
+original_divertor_thickness = 50
 
 # Function to create a reactor with modified radial build
 def create_reactor(
@@ -42,7 +42,7 @@ def create_reactor(
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
-    points = [(divertor_radius-divertor_thickness, -2000), (divertor_radius-divertor_thickness, 0), (divertor_radius+divertor_thickness, 0), (divertor_radius+divertor_thickness, -700)]
+    points = [(divertor_radius-divertor_thickness, -2000), (divertor_radius-divertor_thickness, 0), (divertor_radius+divertor_thickness, 0), (divertor_radius+divertor_thickness, -2000)]
     divertor_lower = cq.Workplane("XZ", origin=(0, 0, 0)).polyline(points).close().revolve(180)
 
     tf_coils = paramak.toroidal_field_coil_rectangle(
@@ -162,7 +162,7 @@ for modified_coil_height_factor in [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1
     frame += 1
 
 for factor in factors:
-    modified_elongation = original_divertor_thickness * factor
-    reactor = create_reactor(divertor_thickness=modified_elongation)
+    modified_divertor_thickness = original_divertor_thickness * factor
+    reactor = create_reactor(divertor_thickness=modified_divertor_thickness)
     export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
     frame += 1

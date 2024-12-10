@@ -41,8 +41,12 @@ def create_reactor(
 
     theta = 3 * np.pi / 2
     divertor_radius = major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
-
-    reactor_height = elongation * radial_build[4][1] * 0.5 + sum([layer[1] for layer in radial_build[5:]])
+    outer_blanket_thickness = sum([layer[1] for layer in radial_build[2:6]])
+    pf_radial_position = divertor_radius + outer_blanket_thickness + 40
+    print([x[1] for x in radial_build])
+    reactor_height = 0.5*elongation * radial_build[6][1] + outer_blanket_thickness
+    print(reactor_height)
+    print(outer_blanket_thickness)
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
@@ -67,10 +71,10 @@ def create_reactor(
         [20, 50, 50, 20],
         [20, 50, 50, 20],
         [
-            (reactor_diameter+5+50+10+20/2, 300*coil_height_factor),
-            (reactor_diameter+5+50+15+50/2, 100*coil_height_factor),
-            (reactor_diameter+5+50+15+50/2, -100*coil_height_factor),
-            (reactor_diameter+5+50+10+20/2, -300*coil_height_factor)
+            (pf_radial_position, reactor_height),
+            (reactor_diameter+5+50+15+50/2, 150*coil_height_factor),
+            (reactor_diameter+5+50+15+50/2, -150*coil_height_factor),
+            (pf_radial_position, -reactor_height)
         ]
     ):
         coils.append(
@@ -145,3 +149,30 @@ for i in range(len(original_radial_build)):
         reactor = create_reactor(modified_radial_build, original_elongation, original_triangularity, original_n_tf_coils, original_coil_height_factor)
         export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
         frame += 1
+
+for factor in factors:
+    modified_elongation = original_elongation * factor
+    reactor = create_reactor(elongation=modified_elongation)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
+    reactor = create_reactor(triangularity=modified_triangularity)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for modified_n_tf_coils in [original_n_tf_coils, original_n_tf_coils -1 , original_n_tf_coils -2, original_n_tf_coils-3, original_n_tf_coils-2, original_n_tf_coils-1,original_n_tf_coils]:
+    reactor = create_reactor(n_tf_coil=modified_n_tf_coils)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for modified_coil_height_factor in [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.1, 1]:
+    reactor = create_reactor(coil_height_factor=modified_coil_height_factor)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for factor in factors:
+    modified_divertor_thickness = original_divertor_thickness * factor
+    reactor = create_reactor(divertor_thickness=modified_divertor_thickness)
+    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    frame += 1
