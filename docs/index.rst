@@ -24,9 +24,13 @@ The style of reaction, sizes of components, plasma shape and number of radial or
 
 .. raw:: html
 
-    <div style="text-align: center;">
-        <video width="600" controls autoplay loop>
-            <source src="_static/animation.mp4" type="video/mp4">
+    <div style="display: flex; justify-content: center;">
+        <video width="45%" controls autoplay loop>
+            <source src="_static/spherical_tokamak_animation.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <video width="45%" controls autoplay loop>
+            <source src="_static/tokamak_animation.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
     </div>

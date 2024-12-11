@@ -23,7 +23,7 @@ original_triangularity=0.55
 original_rotation_angle=180
 original_n_tf_coils = 8
 original_coil_height_factor = 1
-original_divertor_thickness = 40
+original_divertor_thickness = 55
 
 # Function to create a reactor with modified radial build
 def create_reactor(
@@ -43,10 +43,7 @@ def create_reactor(
     divertor_radius = major_radius + minor_radius * np.cos(theta + triangularity * np.sin(theta))
     outer_blanket_thickness = sum([layer[1] for layer in radial_build[2:6]])
     pf_radial_position = divertor_radius + outer_blanket_thickness + 40
-    print([x[1] for x in radial_build])
     reactor_height = 0.5*elongation * radial_build[6][1] + outer_blanket_thickness
-    print(reactor_height)
-    print(outer_blanket_thickness)
 
     # makes a rectangle that overlaps the lower blanket under the plasma
     # the intersection of this and the layers will form the lower divertor
@@ -162,7 +159,7 @@ for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.5
     frame += 1
 
 for modified_n_tf_coils in [original_n_tf_coils, original_n_tf_coils -1 , original_n_tf_coils -2, original_n_tf_coils-3, original_n_tf_coils-2, original_n_tf_coils-1,original_n_tf_coils]:
-    reactor = create_reactor(n_tf_coil=modified_n_tf_coils)
+    reactor = create_reactor(n_tf_coils=modified_n_tf_coils)
     export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
     frame += 1
 
