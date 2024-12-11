@@ -129,6 +129,7 @@ def export_reactor_to_png(reactor, file_path):
             "width": int(1280/2),
             "height": int(1024/2),
             "zoom": 1.25,
+            "background_color": (1.0, 1.0, 1.0),
         },
         file_path=file_path
     )
@@ -147,29 +148,29 @@ for i in range(len(original_radial_build)):
         export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
         frame += 1
 
-for factor in factors:
-    modified_elongation = original_elongation * factor
-    reactor = create_reactor(elongation=modified_elongation)
-    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
-    frame += 1
-
-for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
-    reactor = create_reactor(triangularity=modified_triangularity)
-    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
-    frame += 1
-
 for modified_n_tf_coils in [original_n_tf_coils, original_n_tf_coils -1 , original_n_tf_coils -2, original_n_tf_coils-3, original_n_tf_coils-2, original_n_tf_coils-1,original_n_tf_coils]:
     reactor = create_reactor(n_tf_coils=modified_n_tf_coils)
-    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
 for modified_coil_height_factor in [1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.1, 1]:
     reactor = create_reactor(coil_height_factor=modified_coil_height_factor)
-    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
 
 for factor in factors:
     modified_divertor_thickness = original_divertor_thickness * factor
     reactor = create_reactor(divertor_thickness=modified_divertor_thickness)
-    export_reactor_to_png(reactor, f'spherical_tokamak_frame_{frame:03d}.png')
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for factor in factors:
+    modified_elongation = original_elongation * factor
+    reactor = create_reactor(elongation=modified_elongation)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
+    frame += 1
+
+for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.55, -0.3667, -0.1833, 0.0, 0.1833, 0.3667, 0.55]:
+    reactor = create_reactor(triangularity=modified_triangularity)
+    export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
