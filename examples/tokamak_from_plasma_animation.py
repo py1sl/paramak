@@ -1,5 +1,5 @@
 import paramak
-import imageio
+import io
 import cadquery_png_plugin.plugin
 import numpy as np
 import cadquery as cq
@@ -174,3 +174,5 @@ for modified_triangularity in [0.55, 0.3667, 0.1833, 0.0, -0.1833, -0.3667, -0.5
     reactor = create_reactor(triangularity=modified_triangularity)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
+
+os.system('ffmpeg -r 10 -i tokamak_frame_%3d.png -c:v libx264 -r 30 -pix_fmt yuv420p tokamak_animation.mp4')
