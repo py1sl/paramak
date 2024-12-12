@@ -165,7 +165,7 @@ for factor in factors:
     frame += 1
 
 for factor in factors:
-    modified_elongation = original_elongation * factor
+    modified_elongation = original_elongation * factor[:-2]
     reactor = create_reactor(elongation=modified_elongation)
     export_reactor_to_png(reactor, f'tokamak_frame_{frame:03d}.png')
     frame += 1
