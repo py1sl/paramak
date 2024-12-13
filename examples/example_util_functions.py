@@ -1,6 +1,7 @@
 def transport_particles_on_h5m_geometry(
     h5m_filename: str,
     material_tags: list,
+    vtk_filename: str = None,
     nuclides: list = None,
     cross_sections_xml: str = None,
 ):
@@ -81,12 +82,19 @@ def transport_particles_on_h5m_geometry(
     settings.run_mode = "fixed source"
     settings.source = my_source
 
+    if vtk_filename:
+        mesh = openmc.UnstructuredMesh(filename=vtk_filename, library='moab')
+    else:
+        mesh = openmc.RegularMesh().from_domain(bound_dag_univ)
+    mesh.id = 1
+
     # adds a tally to record the heat deposited in entire geometry
-    cell_tally = openmc.Tally(name="flux")
-    cell_tally.scores = ["flux"]
+    mesh_tally = openmc.Tally(name="flux")
+    mesh_tally.filters = [openmc.MeshFilter(mesh)]
+    mesh_tally.scores = ["flux"]
 
     # groups the two tallies
-    tallies = openmc.Tallies([cell_tally])
+    tallies = openmc.Tallies([mesh_tally])
 
     # builds the openmc model
     my_model = openmc.Model(materials=materials, geometry=geometry, settings=settings, tallies=tallies)
@@ -97,6 +105,16 @@ def transport_particles_on_h5m_geometry(
     # loads up the output file from the simulation
     statepoint = openmc.StatePoint(output_file)
 
-    my_flux_cell_tally = statepoint.get_tally(name="flux")
+    mesh_tally_result = statepoint.get_tally(name="flux")
 
-    return my_flux_cell_tally.mean.flatten()[0]
+    umesh_from_sp = statepoint.meshes[1]
+    centroids = umesh_from_sp.centroids
+    mesh_vols = umesh_from_sp.volumes
+
+    umesh_from_sp.write_data_to_vtk(
+        datasets={'mean': mesh_tally_result.mean.flatten()},
+        filename='mesh_tally_results.vtk',
+    )
+
+    return mesh_tally_result.mean.flatten()
+
