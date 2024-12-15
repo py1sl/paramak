@@ -1,6 +1,7 @@
-from typing import Optional, Sequence, Tuple, Union
+from typing import Sequence, Tuple
 
 import cadquery as cq
+from .assembly import Assembly
 
 from ..utils import get_plasma_index, LayerType
 from ..workplanes.blanket_from_plasma import blanket_from_plasma
@@ -272,7 +273,7 @@ def tokamak(
         center_column=inner_radial_build[0],  # blanket_cutting_cylinder,
     )
 
-    my_assembly = cq.Assembly()
+    my_assembly = Assembly()
 
     for i, entry in enumerate(extra_cut_shapes):
         if isinstance(entry, cq.Workplane):

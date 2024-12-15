@@ -1,6 +1,7 @@
 from typing import Optional, Sequence, Tuple, Union
 
 import cadquery as cq
+from .assembly import Assembly
 
 from ..utils import (
     get_plasma_index,
@@ -235,7 +236,7 @@ def spherical_tokamak(
         center_column=blanket_cutting_cylinder,
     )
 
-    my_assembly = cq.Assembly()
+    my_assembly = Assembly()
 
     for i, entry in enumerate(extra_cut_shapes):
 
