@@ -289,4 +289,7 @@ def spherical_tokamak(
 
     my_assembly.elongation = elongation
     my_assembly.triangularity = triangularity
+    my_assembly.major_radius = major_radius
+    my_assembly.minor_radius = minor_radius
+
     return my_assembly
