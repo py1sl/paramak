@@ -19,7 +19,7 @@ def test_transport_with_magnets(rotation_angle):
         [10, 15],
         [20, 50],
         [20, 50],
-        [(500, 300), (590, 100)],
+        [(500, 300), (610, 100)],
     ):
         poloidal_field_coils.append(
             paramak.poloidal_field_coil(
