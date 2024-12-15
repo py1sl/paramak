@@ -28,18 +28,3 @@ class Assembly(cq.Assembly):
         for part in self:
             names.append(part[1].split('/')[-1])
         return names
-
-
-
-
-# testing
-# sphere1 = cq.Workplane().moveTo(2, 2).sphere(1)
-# box1 = cq.Workplane().box(1, 1, 1)
-# assembly = Assembly()
-# assembly.add(box1, name="box1", color=cq.Color(0.5, 0.5, 0.5))
-# assembly.add(sphere1, name="sphere")
-
-
-# assembly2 = assembly.remove('sphere')
-# assembly3 = assembly.remove('box1')
-# assembly4 = assembly.remove('bosdfsdf')
