@@ -34,7 +34,7 @@ def create_center_column_shield_cylinders(radial_build, rotation_angle, center_c
 
     number_of_cylinder_layers = count_cylinder_layers(radial_build)
 
-    for index, item in enumerate(radial_build):
+    for _, item in enumerate(radial_build):
         if item[0] == LayerType.PLASMA:
             break
 
@@ -158,7 +158,7 @@ def tokamak_from_plasma(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {}
-):
+) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial build and plasma parameters.
 
@@ -217,7 +217,7 @@ def tokamak(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {}
-):
+) -> Assembly:
     """
     Creates a tokamak fusion reactor from a radial and vertical build.
 

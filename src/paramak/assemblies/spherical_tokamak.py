@@ -111,7 +111,7 @@ def spherical_tokamak_from_plasma(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},
-):
+) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
 
@@ -169,7 +169,7 @@ def spherical_tokamak(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},
-):
+) -> Assembly:
     """  Creates a spherical tokamak fusion reactor from a radial build and vertical build.
 
     Args:
@@ -287,4 +287,6 @@ def spherical_tokamak(
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
 
+    my_assembly.elongation = elongation
+    my_assembly.triangularity = triangularity
     return my_assembly
