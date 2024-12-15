@@ -25,7 +25,7 @@ class Assembly(cq.Assembly):
                 new_assembly.add(part[0], name=part[1], color=part[3], loc=part[2])
         if not part_found:
             warnings.warn(f'Part with name {name} not found')
-        # if hasattr(self, 'elongation'):
+
         new_assembly.elongation = self.elongation
         new_assembly.triangularity = self.triangularity
         new_assembly.major_radius = self.major_radius

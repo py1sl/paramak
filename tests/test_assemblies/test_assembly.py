@@ -9,7 +9,6 @@ def test_remove_and_names():
     assembly.add(box1, name="box1", color=cq.Color(0.5, 0.5, 0.5))
     assembly.add(sphere1, name="sphere")
 
-
     assembly2 = assembly.remove('sphere')
     assembly3 = assembly.remove('box1')
     assembly4 = assembly.remove('bosdfsdf')
