@@ -8,20 +8,13 @@ import cadquery as cq
 class Assembly(cq.Assembly):
     """Nested assembly of Workplane and Shape objects defining their relative positions."""
 
-    def __init__(self, elongation=None, triangularity=None, major_radius=None, minor_radius=None, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.elongation = elongation
-        self.triangularity = triangularity
-        self.major_radius = major_radius
-        self.minor_radius = minor_radius
+    elongation=None
+    triangularity=None
+    major_radius=None
+    minor_radius=None
 
     def remove(self, name: str):
-        new_assembly = Assembly(
-            elongation=self.elongation,
-            triangularity=self.triangularity,
-            major_radius=self.major_radius,
-            minor_radius=self.minor_radius
-        )
+        new_assembly = Assembly()
         part_found = False
         for part in self:
             if part[1].endswith(f'/{name}'):
@@ -32,6 +25,11 @@ class Assembly(cq.Assembly):
                 new_assembly.add(part[0], name=part[1], color=part[3], loc=part[2])
         if not part_found:
             warnings.warn(f'Part with name {name} not found')
+        # if hasattr(self, 'elongation'):
+        new_assembly.elongation = self.elongation
+        new_assembly.triangularity = self.triangularity
+        new_assembly.major_radius = self.major_radius
+        new_assembly.minor_radius = self.minor_radius
         return new_assembly
 
     def names(self):
