@@ -43,7 +43,7 @@ from pathlib import Path
 script_path = Path(__file__).resolve()
 script_folder = script_path.parent
 h5m_filename =  script_folder/"dagmc.h5m"
-my_model.export_dagmc_h5m_file(filename=h5m_filename, min_mesh_size=10.0, max_mesh_size=20.0)
+# my_model.export_dagmc_h5m_file(filename=h5m_filename, min_mesh_size=10.0, max_mesh_size=20.0)
 
 # simplified material definitions have been used to keen this example minimal
 mat_layer_1 = openmc.Material(name='layer_1')
@@ -77,17 +77,7 @@ dag_univ = openmc.DAGMCUniverse(filename=h5m_filename)
 
 bbox = dag_univ.bounding_box
 
-radius_upper_right = np.linalg.norm(
-    np.array(bbox[0][0], bbox[0][1]) - np.array([0.0, 0.0])
-)
-radius_lower_left = np.linalg.norm(
-    np.array(bbox[1][0], bbox[1][1]) - np.array([0.0, 0.0])
-)
-radius = max(radius_upper_right, radius_lower_left)
-print('bbox',bbox)
-print('radius', radius)
-print('radius_upper_right', radius_upper_right)
-print('radius_lower_left', radius_lower_left)
+radius = max(abs(bbox[0][0]), abs(bbox[0][1]), abs(bbox[1][0]), abs(bbox[1][1]))
 
 cylinder_surface = openmc.ZCylinder(r=radius, boundary_type='vacuum', surface_id=1000)
 
