@@ -9,7 +9,7 @@ from .test_utils import transport_particles_on_h5m_geometry
 import importlib
 
 
-@pytest.mark.parametrize("rotation_angle", [30, 360])
+@pytest.mark.parametrize("rotation_angle", [30, 180])
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_with_magnets(rotation_angle):
     from cad_to_dagmc import CadToDagmc
