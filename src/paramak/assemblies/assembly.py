@@ -20,7 +20,6 @@ class Assembly(cq.Assembly):
             if part[1].endswith(f'/{name}'):
                 part_found = True
             else:
-                # print('adding' , part)
                 new_assembly.add(part[0], name=part[1], color=part[3], loc=part[2])
         if not part_found:
             warnings.warn(f'Part with name {name} not found')
