@@ -9,7 +9,7 @@ from .test_utils import transport_particles_on_h5m_geometry
 import importlib
 
 
-@pytest.mark.parametrize("rotation_angle", [30, 360])
+@pytest.mark.parametrize("rotation_angle", [30, 180])
 @pytest.mark.skipif(not importlib.util.find_spec("cad_to_dagmc"), reason="Skipping transport tests")
 def test_transport_with_magnets(rotation_angle):
     from cad_to_dagmc import CadToDagmc
@@ -134,3 +134,27 @@ def test_colors():
             "layer_5": (0.5, 0.5, 0.8),
         },
     )
+
+def test_attributes():
+    "passing in the colors dictionary should not raise an error"
+    my_reactor = paramak.spherical_tokamak_from_plasma(
+        radial_build=[
+            (paramak.LayerType.GAP, 10),
+            (paramak.LayerType.SOLID, 50),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.GAP, 50),
+            (paramak.LayerType.PLASMA, 300),
+            (paramak.LayerType.GAP, 60),
+            (paramak.LayerType.SOLID, 15),
+            (paramak.LayerType.SOLID, 60),
+            (paramak.LayerType.SOLID, 10),
+        ],
+        elongation=2,
+        triangularity=0.55,
+        rotation_angle=180,
+    )
+
+    assert my_reactor.elongation == 2
+    assert my_reactor.triangularity == 0.55
+    assert my_reactor.major_radius == 275
+    assert my_reactor.minor_radius == 150

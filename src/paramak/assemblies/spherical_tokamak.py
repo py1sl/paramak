@@ -1,6 +1,7 @@
 from typing import Optional, Sequence, Tuple, Union
 
 import cadquery as cq
+from .assembly import Assembly
 
 from ..utils import (
     get_plasma_index,
@@ -110,7 +111,7 @@ def spherical_tokamak_from_plasma(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},
-):
+) -> Assembly:
     """Creates a spherical tokamak fusion reactor from a radial build and plasma parameters.
 
 
@@ -168,7 +169,7 @@ def spherical_tokamak(
     extra_cut_shapes: Sequence[cq.Workplane] = [],
     extra_intersect_shapes: Sequence[cq.Workplane] = [],
     colors: dict = {},
-):
+) -> Assembly:
     """  Creates a spherical tokamak fusion reactor from a radial build and vertical build.
 
     Args:
@@ -235,7 +236,7 @@ def spherical_tokamak(
         center_column=blanket_cutting_cylinder,
     )
 
-    my_assembly = cq.Assembly()
+    my_assembly = Assembly()
 
     for i, entry in enumerate(extra_cut_shapes):
 
@@ -285,5 +286,10 @@ def spherical_tokamak(
             my_assembly.add(entry, name=name, color=cq.Color(*colors.get(name, (0.5,0.5,0.5))))
 
     my_assembly.add(plasma, name="plasma", color=cq.Color(*colors.get("plasma", (0.5,0.5,0.5))))
+
+    my_assembly.elongation = elongation
+    my_assembly.triangularity = triangularity
+    my_assembly.major_radius = major_radius
+    my_assembly.minor_radius = minor_radius
 
     return my_assembly
