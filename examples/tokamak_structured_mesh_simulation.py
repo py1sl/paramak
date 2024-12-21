@@ -126,7 +126,7 @@ bounding_cell = openmc.Cell(
 # universe = openmc.Universe(cells=[bounding_cell])
 
 
-# geometry = openmc.Geometry([bounding_cell])
+geometry = openmc.Geometry([bounding_cell])
 # import matplotlib.pyplot as plt
 # geometry.plot()
 # plt.show
