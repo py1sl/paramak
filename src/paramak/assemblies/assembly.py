@@ -19,7 +19,6 @@ class Assembly(cq.Assembly):
         for part in self:
             if part[1].endswith(f'/{name}'):
                 part_found = True
-                # print('removing' , part)
             else:
                 # print('adding' , part)
                 new_assembly.add(part[0], name=part[1], color=part[3], loc=part[2])
