@@ -2,6 +2,7 @@ import openmc
 import numpy as np
 import math
 import paramak
+import cadquery as cq
 
 openmc.config['cross_sections'] = '/nuclear_data/cross_sections.xml' # change this to the dir of your cross_sections.xml
 
@@ -24,9 +25,14 @@ my_reactor = paramak.tokamak_from_plasma(
     triangularity=0.55,
     rotation_angle=180,
 )
-my_reactor.save(f"tokamak_minimal.step")
-print(f"Saved as tokamak_minimal.step")
 my_reactor=my_reactor.remove(name='plasma')
+
+# Translate the my_assembly object so that its bottom is at z=0
+translation_vector = cq.Vector(0, 0, -my_reactor.BoundingBox().zmin)
+my_assembly = my_assembly.translate(translation_vector)
+
+print('translation_vector', translation_vector)
+
 
 # this prints all the names of the parts in the reactor
 print(my_reactor.names())
