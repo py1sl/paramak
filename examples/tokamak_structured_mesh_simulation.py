@@ -29,8 +29,7 @@ print(f"Saved as tokamak_minimal.step")
 my_reactor=my_reactor.remove(name='plasma')
 
 # this prints all the names of the parts in the reactor
-for part in my_reactor:
-    print(part[1])
+print(my_reactor.names())
 
 from cad_to_dagmc import CadToDagmc
 my_model = CadToDagmc()
@@ -43,7 +42,7 @@ from pathlib import Path
 script_path = Path(__file__).resolve()
 script_folder = script_path.parent
 h5m_filename =  script_folder/"dagmc.h5m"
-my_model.export_dagmc_h5m_file(filename=h5m_filename, min_mesh_size=10.0, max_mesh_size=20.0)
+# my_model.export_dagmc_h5m_file(filename=h5m_filename, min_mesh_size=10.0, max_mesh_size=20.0)
 
 # simplified material definitions have been used to keen this example minimal
 mat_layer_1 = openmc.Material(name='layer_1')
@@ -66,20 +65,26 @@ mat_layer_5 = openmc.Material(name='layer_5')
 mat_layer_5.add_nuclide('Fe56', 1, "ao")
 mat_layer_5.set_density("g/cm3", 7)
 
+mat_concrete = openmc.Material(name='concrete')
+mat_concrete.add_nuclide('Fe56', 1, "ao")
+mat_concrete.set_density("g/cm3", 7)
 
-materials = openmc.Materials([mat_layer_1, mat_layer_2, mat_layer_3, mat_layer_4, mat_layer_5])
+
+materials = openmc.Materials([mat_layer_1, mat_layer_2, mat_layer_3, mat_layer_4, mat_layer_5, mat_concrete])
 
 wedge_angles = (0, 180)
 
-
 dag_univ = openmc.DAGMCUniverse(filename=h5m_filename)
-# bound_dag_univ = dag_univ.bounded_universe() # wedge not currently supported, PR open
+
+bioshield_to_reactor_gap = 500
+bioshield_radial_thickness = 200
+z_padding = 400
 
 bbox = dag_univ.bounding_box
 
-radius = max(abs(bbox[0][0]), abs(bbox[0][1]), abs(bbox[1][0]), abs(bbox[1][1]))
+dagmc_radius = max(abs(bbox[0][0]), abs(bbox[0][1]), abs(bbox[1][0]), abs(bbox[1][1]))
 
-cylinder_surface = openmc.ZCylinder(r=radius, boundary_type='vacuum', surface_id=1000)
+bioshield_inner_surface = openmc.ZCylinder(r=dagmc_radius+bioshield_to_reactor_gap, surface_id=1000)
 
 wedge_angle_surf_1 = openmc.Plane(
     a=math.sin(math.radians(wedge_angles[0])),
@@ -99,34 +104,43 @@ wedge_angle_surf_2 = openmc.Plane(
     surface_id=1002
 )
 
-lower_z = openmc.ZPlane(bbox[0][2], boundary_type='vacuum', surface_id=1003)
-upper_z = openmc.ZPlane(bbox[1][2], boundary_type='vacuum', surface_id=1004)
+lower_z = openmc.ZPlane(0, surface_id=1003)
+upper_z = openmc.ZPlane(abs(bbox[0][2])+bbox[1][2], surface_id=1004)
+# lower_z = openmc.ZPlane(bbox[0][2], boundary_type='vacuum', surface_id=1003)
+# upper_z = openmc.ZPlane(bbox[1][2], boundary_type='vacuum', surface_id=1004)
 
-if wedge_angles[1] - wedge_angles[0] >= 180.0:
-    region = (
-        -cylinder_surface
+
+wedge_region = (
+        -bioshield_inner_surface
         & +lower_z
         & -upper_z
         & (-wedge_angle_surf_1 | +wedge_angle_surf_2)
     )
-else:
-    region = (
-        -cylinder_surface
-        & +lower_z
-        & -upper_z
-        & -wedge_angle_surf_1
-        & +wedge_angle_surf_2
-    )
+
 
 bounding_cell = openmc.Cell(
     fill=dag_univ,
-    cell_id=10000,
-    region=region
+    cell_id=1000,
+    region=wedge_region
 )
-# universe = openmc.Universe(cells=[bounding_cell])
+# moving the geometry so that the bottom of is at z=0
+# to do this we need to move the geometry up as it is centered around z=0
+# we also need to move it up so the the start of the earth layer is at z=0
+dagmc_geometry_offset = abs(bbox[0][2])
+bounding_cell.translation = (0,0,dagmc_geometry_offset)
 
 
-geometry = openmc.Geometry([bounding_cell])
+floor_lower_surface = openmc.ZPlane(z0=0, boundary_type='vacuum', surface_id=1005)
+bioshield_outer_surface = openmc.ZCylinder(r=dagmc_radius+bioshield_to_reactor_gap, boundary_type='vacuum', surface_id=1006)
+
+bioshield_region = -bioshield_outer_surface & +bioshield_inner_surface & +lower_z & -upper_z & (-wedge_angle_surf_1 | +wedge_angle_surf_2)
+bioshield_cell = openmc.Cell(region=bioshield_region, fill=mat_concrete, cell_id=1001)
+
+floor_region = -lower_z & +floor_lower_surface & -bioshield_outer_surface & (-wedge_angle_surf_1 | +wedge_angle_surf_2)
+floor_cell = openmc.Cell(region=floor_region, fill=mat_concrete, cell_id=1002)
+
+geometry = openmc.Geometry([bounding_cell, floor_cell, bioshield_cell])
+
 # import matplotlib.pyplot as plt
 # geometry.plot()
 # plt.show
