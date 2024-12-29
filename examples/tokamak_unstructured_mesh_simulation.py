@@ -78,8 +78,30 @@ materials = openmc.Materials([mat_layer_1, mat_layer_2, mat_layer_3, mat_layer_4
 
 
 dag_univ = openmc.DAGMCUniverse(filename=h5m_filename)
-bound_dag_univ = dag_univ.bounded_universe()
-geometry = openmc.Geometry(root=bound_dag_univ)
+
+bbox = dag_univ.bounding_box
+dagmc_radius = max(abs(bbox[0][0]), abs(bbox[0][1]), abs(bbox[1][0]), abs(bbox[1][1]))
+
+cylinder_surface = openmc.ZCylinder(r=dagmc_radius, boundary_type='vacuum', surface_id=1000)
+lower_z = openmc.ZPlane(bbox[0][2], boundary_type='vacuum', surface_id=1003)
+upper_z = openmc.ZPlane(bbox[1][2], boundary_type='vacuum', surface_id=1004)
+side_surface = openmc.YPlane(y0=0, boundary_type="reflective", surface_id=1001)
+
+wedge_region = (
+        -cylinder_surface
+        & +lower_z
+        & -upper_z
+        & +side_surface
+    )
+
+bounding_cell = openmc.Cell(
+    fill=dag_univ,
+    cell_id=1000,
+    region=wedge_region
+)
+
+# bound_dag_univ = dag_univ.bounded_universe()
+geometry = openmc.Geometry([bounding_cell])
 
 # initializes a new source object
 my_source = openmc.IndependentSource()
