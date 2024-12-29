@@ -1,5 +1,7 @@
 import paramak
 import openmc
+from cad_to_dagmc import CadToDagmc
+from pathlib import Path
 
 
 openmc.config["cross_sections"] = '/nuclear_data/cross_sections.xml'
@@ -38,21 +40,41 @@ my_reactor.save(f"tokamak_minimal.step")
 print(f"Saved as tokamak_minimal.step")
 my_reactor=my_reactor.remove(name="plasma")  # removing as we don't need the plasma for this neutronics simulation
 
-from cad_to_dagmc import CadToDagmc
 my_model = CadToDagmc()
-material_tags = ["mat1"] * 5  # as inner and outer layers are one solid there are only 6 solids in model
+# as inner and outer layers are one solid there are only 6 solids in model
+material_tags = ["layer_1", "layer_2", "layer_3", "layer_4", "layer_5"]
 my_model.add_cadquery_object(cadquery_object=my_reactor, material_tags=material_tags)
 my_model.export_dagmc_h5m_file(min_mesh_size=10.0, max_mesh_size=20.0, filename="dagmc.h5m")
 my_model.export_unstructured_mesh_file(min_mesh_size=10.0, max_mesh_size=20.0, filename="unstructured_mesh.vtk")
 
-h5m_filename = "dagmc.h5m"
+
+script_folder = Path(__file__).resolve().parent
+h5m_filename = script_folder / "dagmc.h5m"
 
 
-mat1 = openmc.Material(name='mat1')
-mat1.add_nuclide('Fe56', 1, "ao")
-mat1.set_density("g/cm3", 0.01)
+mat_layer_1 = openmc.Material(name="layer_1")
+mat_layer_1.add_element("Cu", 1, "ao")
+mat_layer_1.set_density("g/cm3", 7)
 
-materials = openmc.Materials([mat1])
+mat_layer_2 = openmc.Material(name="layer_2")
+mat_layer_2.add_nuclide("W186", 1, "ao")
+mat_layer_2.set_density("g/cm3", 0.01)
+
+mat_layer_3 = openmc.Material(name="layer_3")
+mat_layer_3.add_nuclide("Fe56", 1, "ao")
+mat_layer_3.set_density("g/cm3", 7)
+
+mat_layer_4 = openmc.Material(name="layer_4")
+mat_layer_4.add_element("Li", 1, "ao")
+mat_layer_4.set_density("g/cm3", 0.5)
+
+mat_layer_5 = openmc.Material(name="layer_5")
+mat_layer_5.add_nuclide("Fe56", 1, "ao")
+mat_layer_5.set_density("g/cm3", 7)
+
+
+materials = openmc.Materials([mat_layer_1, mat_layer_2, mat_layer_3, mat_layer_4, mat_layer_5])
+
 
 
 dag_univ = openmc.DAGMCUniverse(filename=h5m_filename)
@@ -114,7 +136,7 @@ mesh_vols = umesh_from_sp.volumes # not needed in the next release of openmc
 
 umesh_from_sp.write_data_to_vtk(
     datasets={'mean': mesh_tally_result.mean.flatten()},
-    filename='mesh_tally_results.vtk',
+    filename='unstructured_mesh_tally_results.vtk',
 )
 
-print('VTK file saved to mesh_tally_results.vtk')
+print('VTK file saved to unstructured_mesh_tally_results.vtk')
