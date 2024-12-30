@@ -61,19 +61,3 @@ result2 = paramak.spherical_tokamak_from_plasma(
 )
 
 result2.save("spherical_tokamak_from_plasma_with_prin_tf_coils.step")
-
-# from example_util_functions import transport_particles_on_h5m_geometry
-# from cad_to_dagmc import CadToDagmc
-# my_model = CadToDagmc()
-# material_tags = ["mat1"] * 7
-# my_model.add_cadquery_object(cadquery_object=result, material_tags=material_tags)
-# my_model.export_dagmc_h5m_file(min_mesh_size=3.0, max_mesh_size=20.0)
-
-# h5m_filename = "dagmc.h5m"
-# flux = transport_particles_on_h5m_geometry(
-#     h5m_filename=h5m_filename,
-#     material_tags=material_tags,
-#     nuclides=["H1"] * len(material_tags),
-#     cross_sections_xml="tests/cross_sections.xml",
-# )
-# assert flux > 0.0

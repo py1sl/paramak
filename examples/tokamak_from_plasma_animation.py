@@ -3,6 +3,7 @@ import io
 import cadquery_png_plugin.plugin
 import numpy as np
 import cadquery as cq
+import os
 
 original_radial_build=[
     (paramak.LayerType.GAP, 40),
