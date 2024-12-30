@@ -61,7 +61,7 @@ my_reactor = paramak.tokamak_from_plasma(
     rotation_angle=180,
 )
 
-# removing the plasma from the CadQuery Assembly as we don't need this in the 
+# removing the plasma from the CadQuery Assembly as we don't need this in the
 # DAGMC mesh for the neutronics simulation.
 my_reactor = my_reactor.remove(name="plasma")
 
@@ -185,18 +185,21 @@ my_source.energy = openmc.stats.muir(e0=14080000.0, m_rat=5.0, kt=20000.0)
 
 
 # specifies the simulation computational intensity
-settings = openmc.Settings(
-    batches = 10,
-    particles = 10000,
-    run_mode = "fixed source",
-    source = my_source
-)
+settings = openmc.Settings(batches=10, particles=10000, run_mode="fixed source", source=my_source)
 
 # adds a tally to record the heat deposited in a mesh overlaid over entire geometry
 
 mesh = openmc.CylindricalMesh(
     r_grid=np.linspace(0, dagmc_radius + bioshield_to_reactor_gap + bioshield_radial_thickness, 100),
-    z_grid=np.linspace(0, floor_vertical_thickness+ reactor_to_floor_gap+ reactor_to_ceiling_gap+ bbox.width[2] + ceiling_vertical_thickness, 100),
+    z_grid=np.linspace(
+        0,
+        floor_vertical_thickness
+        + reactor_to_floor_gap
+        + reactor_to_ceiling_gap
+        + bbox.width[2]
+        + ceiling_vertical_thickness,
+        100,
+    ),
     origin=(0, 0, 0),
     phi_grid=np.linspace(0, np.pi, 100),
 )

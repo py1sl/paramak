@@ -35,21 +35,3 @@ class Assembly(cq.Assembly):
         for part in self:
             names.append(part[1].split('/')[-1])
         return names
-
-    def bounding_box(self):
-        # Iterate through the remaining parts and update the bounding box coordinates
-        for i, part in enumerate(self):
-            if i == 0:
-                first_part_bbox = part[0].BoundingBox()
-                bbox_min = cq.Vector(first_part_bbox.xmin, first_part_bbox.ymin, first_part_bbox.zmin)
-                bbox_max = cq.Vector(first_part_bbox.xmax, first_part_bbox.ymax, first_part_bbox.zmax)
-            else:
-                part_bbox = part[0].BoundingBox()
-                bbox_min.x = min(bbox_min.x, part_bbox.xmin)
-                bbox_min.y = min(bbox_min.y, part_bbox.ymin)
-                bbox_min.z = min(bbox_min.z, part_bbox.zmin)
-                bbox_max.x = max(bbox_max.x, part_bbox.xmax)
-                bbox_max.y = max(bbox_max.y, part_bbox.ymax)
-                bbox_max.z = max(bbox_max.z, part_bbox.zmax)
-
-        return (bbox_min.x, bbox_min.y, bbox_min.z), (bbox_max.x, bbox_max.y, bbox_max.z)
