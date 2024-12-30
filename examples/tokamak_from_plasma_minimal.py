@@ -1,5 +1,3 @@
-from example_util_functions import transport_particles_on_h5m_geometry
-
 import paramak
 
 my_reactor = paramak.tokamak_from_plasma(

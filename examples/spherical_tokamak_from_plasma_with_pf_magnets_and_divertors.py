@@ -1,7 +1,3 @@
-from pathlib import Path
-
-from example_util_functions import transport_particles_on_h5m_geometry
-
 import paramak
 
 rotation_angle = 180

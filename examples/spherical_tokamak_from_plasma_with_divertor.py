@@ -1,9 +1,5 @@
-from pathlib import Path
-
-from example_util_functions import transport_particles_on_h5m_geometry
-
 import paramak
-from cadquery import Workplane, vis
+from cadquery import Workplane
 
 
 # makes a rectangle that overlaps the lower blanket under the plasma

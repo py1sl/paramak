@@ -1,7 +1,5 @@
-from example_util_functions import transport_particles_on_h5m_geometry
-from paramak.utils import create_wire_workplane_from_points
 import paramak
-from cadquery import vis, Workplane
+from cadquery import Workplane
 
 # makes a rectangle that overlaps the lower blanket under the plasma
 # the intersection of this and the layers will form the lower divertor

@@ -1,5 +1,3 @@
-from example_util_functions import transport_particles_on_h5m_geometry
-
 import paramak
 
 extra_cut_shapes = []
