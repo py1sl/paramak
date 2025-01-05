@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 69.5.1", "setuptools_scm[toml]>=8.1.0"]
+requires = ["setuptools>=72.1.0", "setuptools_scm[toml]>=8.1.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,8 +19,8 @@ license = {file = "LICENSE.txt"}
 requires-python = ">=3.8"
 keywords = ["python", "geometry", "reactor", "model", "cad", "fusion", "parametric", "dagmc", "openmc"]
 dependencies = [
-    "cadquery",
-    "numpy<=1.26.4",
+    "cadquery>=2.5.2",
+    "numpy",
     "mpmath",
     "sympy",
     "scipy",
@@ -47,7 +47,8 @@ docs = [
     "pydata-sphinx-theme",
     "cadquery",
     "ipython",
-    "sphinx_design"
+    "sphinx_design",
+    "setuptools",
 ]
 
 [tool.black]
