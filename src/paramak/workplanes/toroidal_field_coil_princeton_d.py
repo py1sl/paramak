@@ -2,7 +2,7 @@ import typing
 import numpy as np
 from ..utils import create_wire_workplane_from_points, rotate_solid
 from scipy import integrate
-from scipy.optimize import minimize
+from scipy.optimize import brentq
 from typing import List, Tuple
 from ..workplanes.cutting_wedge import cutting_wedge
 
@@ -19,13 +19,13 @@ def _compute_inner_points(R1, R2):
         points
     """
 
-    def error(z_0, R0, R2):
+    def error(z_0):
         segment = get_segment(R0, R2, z_0)
-        return abs(segment[1][-1])
+        return segment[1][-1]
 
     def get_segment(a, b, z_0, num=5):
         a_R = np.linspace(a, b, num=num, endpoint=True)
-        asol = integrate.odeint(solvr, [z_0[0], 0], a_R)
+        asol = integrate.odeint(solvr, [z_0, 0], a_R)
         return a_R, asol[:, 0], asol[:, 1]
 
     def solvr(Y, R):
@@ -34,11 +34,14 @@ def _compute_inner_points(R1, R2):
     R0 = (R1 * R2) ** 0.5
     k = 0.5 * np.log(R2 / R1)
 
-    # computing of z_0
-    # z_0 is computed by ensuring outer segment end is zero
-    z_0 = 10  # initial guess for z_0
-    res = minimize(error, z_0, args=(R0, R2))
-    z_0 = res.x
+    def find_intersect():
+        z_lo, z_hi = -10.0, 10.0
+        while error(z_lo) * error(z_hi) > 0:
+            z_lo *= 2.0
+            z_hi *= 2.0
+        return brentq(error, z_lo, z_hi)
+
+    z_0 = find_intersect()
 
     # compute inner and outer segments
     segment1 = get_segment(R0, R1, z_0)
